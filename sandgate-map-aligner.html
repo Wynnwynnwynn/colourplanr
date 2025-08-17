@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sandgate Map Aligner</title>
+  <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+  <style>
+    html, body { height:100%; margin:0; }
+    #map { position:absolute; top:0; bottom:0; width:100%; }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+<script>
+const map = new maplibregl.Map({
+  container: 'map',
+  style: {
+    "version": 8,
+    "sources": {
+      "osm": {
+        "type": "raster",
+        "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+        "tileSize": 256,
+        "attribution": "&copy; OpenStreetMap contributors"
+      }
+    },
+    "layers": [{ "id": "osm", "type": "raster", "source": "osm" }]
+  },
+  center: [153.07, -27.33],
+  zoom: 12
+});
+
+// replace with your uploaded image URL or dataURI
+const imageURL = "z34vfyfzfgwa1.jpg";
+
+// rough bounds
+let bounds = [
+  [153.040, -27.295], // NW
+  [153.095, -27.295], // NE
+  [153.095, -27.360], // SE
+  [153.040, -27.360]  // SW
+];
+
+map.on('load', () => {
+  map.addSource('scan', {
+    type: 'image',
+    url: imageURL,
+    coordinates: bounds
+  });
+  map.addLayer({ id: 'scan', type: 'raster', source: 'scan' });
+});
+</script>
+</body>
+</html>
